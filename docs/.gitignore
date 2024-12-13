@@ -5,30 +5,31 @@
 /.pnp
 .pnp.js
 
-# JetBrains IDE files
-.idea/
-
 # testing
 /coverage
 
+# next.js
+/.next/
+/out/
+
 # production
-# /dist
+/build
 
 # misc
 .DS_Store
 *.pem
-tsconfig.tsbuildinfo
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-#docs
-/docs/node_modules
-/docs/build
+# local env files
+.env*.local
 
-#docs nextjs
-/docs/nextjs/node_modules
-/docs/nextjs/.next
-/docs/nextjs/next-env.d.ts
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

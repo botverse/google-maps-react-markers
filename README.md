@@ -30,6 +30,12 @@ The library implements [Google Maps Custom Overlays](https://developers.google.c
 [![Buy me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/giorgiabosello)
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.me/giorgiabosello)
 
+## 💬 Discussion
+
+> **Released TypeScript version of the library!**
+
+Feedbacks are welcome in [this discussion](https://github.com/giorgiabosello/google-maps-react-markers/discussions/109).
+
 ## 🚀 Demo
 
 <a href="https://giorgiabosello.github.io/google-maps-react-markers/" target="blank">
@@ -61,6 +67,8 @@ npm install --save google-maps-react-markers
 ## 💻 Usage
 
 ```jsx
+import GoogleMap from 'google-maps-react-markers'
+
 const App = () => {
   const mapRef = useRef(null)
   const [mapReady, setMapReady] = useState(false)
@@ -80,7 +88,7 @@ const App = () => {
 
     // inside the map instance you can call any google maps method
     mapRef.current.setCenter({ lat, lng })
-    // rif. https://developers.google.com/maps/documentation/javascript/reference?hl=it
+    // ref. https://developers.google.com/maps/documentation/javascript/reference?hl=it
   }
 
   return (
@@ -96,7 +104,17 @@ const App = () => {
         onChange={(map) => console.log('Map moved', map)}
       >
         {coordinates.map(({ lat, lng, name }, index) => (
-          <Marker key={index} lat={lat} lng={lng} markerId={name} onClick={onMarkerClick} />
+          <Marker
+            key={index}
+            lat={lat}
+            lng={lng}
+            markerId={name}
+            onClick={onMarkerClick} // you need to manage this prop on your Marker component!
+            // draggable={true}
+            // onDragStart={(e, { latLng }) => {}}
+            // onDrag={(e, { latLng }) => {}}
+            // onDragEnd={(e, { latLng }) => {}}
+          />
         ))}
       </GoogleMap>
     </>
@@ -110,37 +128,48 @@ export default App
 
 ### GoogleMap component
 
-| Prop                 | Type     | Required | Default                     | Description                                                                                                                                             |
-| -------------------- | -------- | -------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **apiKey**           | string   | **yes**  | `''`                        | API Key to load Google Maps                                                                                                                             |
-| **defaultCenter**    | object   | **yes**  | `{ lat: 0, lng: 0 }`        | Default center of the map                                                                                                                               |
-| **defaultZoom**      | number   | **yes**  | `1-20`                      | Default zoom of the map                                                                                                                                 |
-| libraries            | array    | no       | `['places', 'geometry']`    | Libraries to load                                                                                                                                       |
-| options              | object   | no       | `{}`                        | Options for the map                                                                                                                                     |
-| onGoogleApiLoaded    | function | no       | `() => {}`                  | Callback when the map is loaded                                                                                                                         |
-| onChange             | function | no       | `() => {}`                  | Callback when the map has changed                                                                                                                       |
-| children             | node     | no       | `null`                      | Markers of the map                                                                                                                                      |
-| loadScriptExternally | bool     | no       | `false`                     | Whether to load the Google Maps script externally.<br>If `true`, the `status` prop is required and it will be used to control the loading of the script |
-| status               | string   | no       | `idle`                      | The forced status of the Google Maps script. Depends on `loadScriptExternally`.<br>It can be one of `idle`, `loading`, `ready`, `error`                 |
-| loadingContent       | node     | no       | `'Google Maps is loading'`  | Content to show while the map is loading                                                                                                                |
-| idleContent          | node     | no       | `'Google Maps is on idle'`  | Content to show when the map is idle                                                                                                                    |
-| errorContent         | node     | no       | `'Google Maps is on error'` | Content to show when the map has an error                                                                                                               |
-| mapMinHeight         | string   | no       | `'unset'`                   | Min height of the map                                                                                                                                   |
-| containerProps       | object   | no       | `{}`                        | Props for the div container of the map                                                                                                                  |
-| scriptCallback       | function | no       | `() => {}`                  | window global callback passed to the Google Script                                                                                                      |
+| Prop                 | Type     | Required | Default                     | Description                                                                                                                                                                           |
+| -------------------- | -------- | -------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **apiKey**           | string   | **yes**  | `''`                        | API Key to load Google Maps                                                                                                                                                           |
+| **defaultCenter**    | object   | **yes**  | `{ lat: 0, lng: 0 }`        | Default center of the map                                                                                                                                                             |
+| **defaultZoom**      | number   | **yes**  | `1-20`                      | Default zoom of the map                                                                                                                                                               |
+| libraries            | array    | no       | `['places', 'geometry']`    | Libraries to load                                                                                                                                                                     |
+| options              | object   | no       | `{}`                        | Options for the map                                                                                                                                                                   |
+| onGoogleApiLoaded    | function | no       | `() => {}`                  | Callback when the map is loaded                                                                                                                                                       |
+| onChange             | function | no       | `() => {}`                  | Callback when the map has changed                                                                                                                                                     |
+| events               | array    | no       | `[]`                        | Array of objects name/handler of [DOM events](https://en.wikipedia.org/wiki/DOM_event) to pass down to the `div` overlay. Example: `events: [{ name: 'onClick', handler: () => {} }]` |
+| children             | node     | no       | `null`                      | Markers of the map                                                                                                                                                                    |
+| loadScriptExternally | bool     | no       | `false`                     | Whether to load the Google Maps script externally.<br>If `true`, the `status` prop is required and it will be used to control the loading of the script                               |
+| status               | string   | no       | `idle`                      | The forced status of the Google Maps script. Depends on `loadScriptExternally`.<br>It can be one of `idle`, `loading`, `ready`, `error`                                               |
+| loadingContent       | node     | no       | `'Google Maps is loading'`  | Content to show while the map is loading                                                                                                                                              |
+| idleContent          | node     | no       | `'Google Maps is on idle'`  | Content to show when the map is idle                                                                                                                                                  |
+| errorContent         | node     | no       | `'Google Maps is on error'` | Content to show when the map has an error                                                                                                                                             |
+| mapMinHeight         | string   | no       | `'unset'`                   | Min height of the map                                                                                                                                                                 |
+| containerProps       | object   | no       | `{}`                        | Props for the div container of the map                                                                                                                                                |
+| scriptCallback       | function | no       | `() => {}`                  | window global callback passed to the Google Script                                                                                                                                    |
+| externalApiParams    | object   | no       | `undefined`                 | Optional params to pass to the Google API script. Eg. `{region: 'IT', language: 'it'}`                                                                                                |
 
 ### Markers
 
-| Prop    | Type   | Required | Default     | Description             |
-| ------- | ------ | -------- | ----------- | ----------------------- |
-| **lat** | number | **yes**  | `undefined` | Latitude of the marker  |
-| **lng** | number | **yes**  | `undefined` | Longitude of the marker |
+| Prop        | Type   | Required | Default     | Description                                                                                              |
+| ----------- | ------ | -------- | ----------- | -------------------------------------------------------------------------------------------------------- |
+| **lat**     | number | **yes**  | `undefined` | Latitude of the marker                                                                                   |
+| **lng**     | number | **yes**  | `undefined` | Longitude of the marker                                                                                  |
+| draggable   | bool   | no       | `false`     | If true, the marker can be dragged                                                                       |
+| onDragStart | func   | no       | `() => {}`  | This event is fired when the user starts dragging the marker                                             |
+| onDrag      | func   | no       | `() => {}`  | This event is repeatedly fired while the user drags the marker                                           |
+| onDragEnd   | func   | no       | `() => {}`  | This event is fired when the user stops dragging the marker                                              |
+| zIndex      | number | no       | 0           | The z-index of the marker. To bring the marker to the front, e.g. when it is active, set a higher value. |
 
 ## 📍 Clustering
 
 For clustering, follow this [guide](https://www.leighhalliday.com/google-maps-clustering) using [useSupercluster Hook](https://github.com/leighhalliday/use-supercluster), but use bounds in this way:
 
 ```jsx
+const [mapBounds, setMapBounds] = useState({
+  bounds: [0, 0, 0, 0],
+  zoom: 0,
+})
 const onMapChange = ({ bounds, zoom }) => {
   const ne = bounds.getNorthEast()
   const sw = bounds.getSouthWest()
@@ -161,23 +190,26 @@ const onMapChange = ({ bounds, zoom }) => {
 To run the project locally, clone the repo and run:
 
 ```bash
-yarn install
+# in the root directory
+yarn --frozen-install
 yarn dev
 ```
 
 ```bash
-# in another tab
+# in another tab (with NextJS and SSR)
 cd docs
 yarn install
 yarn dev
 ```
 
-Do your changes to `src/` or `docs/src` directory, commits all files (ones in `dist` too) and open a PR.
+Do your changes to `src/` or `docs/src` directory, commits all files in the root directory (`yarn.lock` and ones in `dist` too) and open a PR.
 
 ## 💻 Built with
 
 - [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 - [Google Maps Custom Overlays](https://developers.google.com/maps/documentation/javascript/customoverlays)
+- [tsup](https://github.com/egoist/tsup): for bundling
 - [ESLint](https://eslint.org/): for linting
 - [Prettier](https://prettier.io/): for code formatting
 
